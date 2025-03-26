@@ -58,6 +58,9 @@
     <script>
         function appendToDisplay(value) {
             let display = document.getElementById('display1');
+             
+                // Smooth fast scrolling
+             smoothScrollToRight(display)
            
             display.value += value;
             if(value === "+" || value === "-" || value === "*" || value === "/"){
@@ -69,6 +72,23 @@
             }
         }
 
+        function smoothScrollToRight(element) {
+        let start = element.scrollLeft;
+        let end = element.scrollWidth;
+        let speed = 10; // Higher = faster scroll
+        let step = () => {
+            start += speed;
+            if (start < end) {
+                element.scrollLeft = start;
+                requestAnimationFrame(step);
+            } else {
+                element.scrollLeft = end; // Ensure it reaches the end
+            }
+        };
+        requestAnimationFrame(step);
+    }
+
+
         function clearDisplay() {
             document.getElementById('display1').value = '';
             document.getElementById('display2').value = '';
@@ -78,7 +98,13 @@
         function deleteLastChar() {
             let display = document.getElementById('display1');
             display.value = display.value.slice(0, -1);
-            updateRealTimeOutput(display.value);
+            if(display.value === ''){
+                document.getElementById('display2').value = '';
+                 operator=false;
+            }else{
+                updateRealTimeOutput(display.value);
+            }
+            
         }
 
         function updateRealTimeOutput(expression) {
